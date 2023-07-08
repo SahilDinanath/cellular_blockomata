@@ -11,7 +11,7 @@ public class Cell {
     private int state;
     private boolean alive;
 
-    private Cell(Material color, int state){
+    public Cell(Material color, int state){
         this.color = color;
         this.state = state;
         alive = true;

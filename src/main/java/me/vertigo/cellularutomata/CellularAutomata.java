@@ -14,6 +14,7 @@ public final class CellularAutomata extends JavaPlugin {
         System.out.println("Cellular Automata Starting");
 
         Main main = new Main();
+
         main.runCellularAutomata();
     }
 
@@ -21,6 +22,6 @@ public final class CellularAutomata extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        System.out.println("Cellular Automata Start");
+        System.out.println("Cellular Automata Stopping");
     }
 }

@@ -41,7 +41,7 @@ public class Colony {
         for(int x = 0; x< xSize;x++){
             for(int y = 0; y< ySize;y++){
                 for(int z = 0; z< zSize;z++){
-                    spawnCellAtCoords(Material.STONE,x,y,z);
+                    colonyOfCells[y][x][z] = new Cell(Material.STONE, states);
                 }
             }
         }

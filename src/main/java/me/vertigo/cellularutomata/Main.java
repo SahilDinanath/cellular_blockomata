@@ -22,14 +22,9 @@ public  class Main {
         Colony colonyOfCells = new Colony(survivalInterval, spawnInterval, states);
 
 
-        while(true){
+        for(int i = 0; i < 1000; i++){
             colonyOfCells.displayColonyInWorld();
             colonyOfCells.iterateColony();
-            try{
-                Thread.sleep(20);
-            }catch (InterruptedException e){
-                Thread.currentThread().interrupt();
-            }
         }
         // Example usage: place a stone block at coordinates (10, 64, 10)
     }
