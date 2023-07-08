@@ -11,11 +11,22 @@ public class Cell {
     private int state;
     private boolean alive;
 
-    public Cell(Material color, int state){
+    private Cell(Material color, int state){
         this.color = color;
         this.state = state;
         alive = true;
     }
+
+    public void cellSpawn(Material color, int state){
+        setColor(color);
+        setState(state);
+        setAlive(true);
+    }
+
+    public void cellKill(){
+        setColor(Material.AIR);
+    }
+
 
     public Material getColor(){
         return color;
@@ -30,10 +41,10 @@ public class Cell {
     public void setColor(Material color){
         this.color = color;
     }
-    public void getState(int state){
+    public void setState(int state){
         this.state = state;
     }
-    public void getAlive(boolean alive){
+    public void setAlive(boolean alive){
         this.alive = alive;
     }
 
