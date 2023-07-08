@@ -1,54 +1,36 @@
 package me.vertigo.cellularutomata;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
+import com.google.common.collect.Range;
 
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 public  class Main {
-    //settings
-    private int xSize = 100;
-    private int ySize = 100;
-    private int zSize = 100;
-    //settings stop
-    private Cell[][][] colonyOfCells = new Cell[ySize][xSize][zSize];
-
-
-    public void init(){
-        for(Cell[][] row: colonyOfCells){
-           for(Cell[] column: row){
-               for(Cell cell: column){
-                   cell = new Cell(Material.STONE,5);
-               }
-           }
-        }
-    }
-
-    public void placeBlock(World world, int x, int y, int z, Material blockType) {
-        Block block = world.getBlockAt(x, y, z);
-        block.setType(blockType);
-    }
-
-    public void displayColony(){
-        World world = Bukkit.getWorld("world");
-        for(int y = 0; y< ySize;y++){
-            for(int x = 0; x< xSize;x++){
-                for(int z = 0; z< zSize;z++){
-                    placeBlock(world, 10+x, 64+y, 10+z, Material.STONE);
-                }
-            }
-        }
-    }
-
     public void calculateNewState(){
 
     }
     public void runCellularAutomata() {
-        // Get the world
 
-        displayColony();
+        //rules
+        Vector<Range<Integer>> survivalInterval = new Vector<Range<Integer>>();
+        survivalInterval.add(Range.closed(4,4));
+
+        Vector<Range<Integer>> spawnInterval = new Vector<Range<Integer>>();
+        spawnInterval.add(Range.closed(4,4));
+
+        int states = 5;
+        Colony colonyOfCells = new Colony(survivalInterval, spawnInterval, states);
+
+
+        while(true){
+            colonyOfCells.displayColonyInWorld();
+            colonyOfCells.iterateColony();
+            try{
+                Thread.sleep(20);
+            }catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+        }
         // Example usage: place a stone block at coordinates (10, 64, 10)
     }
 }
