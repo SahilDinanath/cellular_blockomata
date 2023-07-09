@@ -1,10 +1,6 @@
 package me.vertigo.cellularutomata;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class Cell {
     private Material color;
@@ -14,7 +10,7 @@ public class Cell {
     public Cell(Material color, int state){
         this.color = color;
         this.state = state;
-        alive = true;
+        this.alive = true;
     }
 
     public void cellSpawn(Material color, int state){

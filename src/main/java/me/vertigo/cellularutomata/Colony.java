@@ -10,7 +10,7 @@ import java.util.Vector;
 
 public class Colony {
     //settings
-    private int xCoordsInWorld = 10, yCoordsInWorld = 64, zCoordsInWorld = 10;
+    private int xCoordsInWorld = 1000, yCoordsInWorld = 64, zCoordsInWorld = 1000;
     private int xSize = 100, ySize = 100, zSize = 100;
 
     //variables
@@ -37,14 +37,24 @@ public class Colony {
         getCellAtCoords(x, y, z).cellKill();
     }
 
+    public void spawnCubeInColony() {
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                for (int z = 0; z < 3; z++) {
+                    spawnCellAtCoords(Material.STONE, x, y, z);
+                }
+            }
+        }
+    }
     public void colonyInit(){
         for(int x = 0; x< xSize;x++){
             for(int y = 0; y< ySize;y++){
                 for(int z = 0; z< zSize;z++){
-                    colonyOfCells[y][x][z] = new Cell(Material.STONE, states);
+                    colonyOfCells[y][x][z] = new Cell(Material.AIR, states);
                 }
             }
         }
+        spawnCubeInColony();
     }
     private boolean checkCellSurvival(int x, int y, int z){
         for(Range<Integer> survivalRange : survivalIntervals){
@@ -67,19 +77,20 @@ public class Colony {
         for(int x = 0; x< xSize;x++){
             for(int y = 0; y< ySize;y++){
                 for(int z = 0; z< zSize;z++){
-                    Cell currentCell= getCellAtCoords(x,y,z);
-                    if(currentCell.getAlive()){
+                    if(getCellAtCoords(x,y,z).getAlive()){
                         if(!checkCellSurvival(x,y,z)){
-                            currentCell.setAlive(false);
+                            getCellAtCoords(x,y,z).setAlive(false);
                         }
                     }
                     else{
-                        if(currentCell.getState()>0){
-                            currentCell.setState(currentCell.getState() -1);
+                        if(getCellAtCoords(x,y,z).getState()>0){
+                            getCellAtCoords(x,y,z).setState(getCellAtCoords(x,y,z).getState() -1);
+                            if(getCellAtCoords(x,y,z).getState() == 0){
+                                removeCellAtCoords(x,y,z);
+                            }
                         }
                         else{
-                            removeCellAtCoords(x,y,z);
-                            if(!checkCellSpawn(x,y,z)){
+                            if(checkCellSpawn(x,y,z)){
                                 spawnCellAtCoords(Material.STONE,x,y,z);
                             }
                         }
@@ -108,26 +119,26 @@ public class Colony {
         int neighbours = 0;
 
         if(x != 0 && x <xSize-1){
-            if(getCellAtCoords(x-1,y,z).getAlive()){
+            if(getCellAtCoords(x-1,y,z).getState()>0){
                 neighbours++;
             }
-            if(getCellAtCoords(x+1,y,z).getAlive()){
+            if(getCellAtCoords(x+1,y,z).getState()>0){
                 neighbours++;
             }
         }
         if(y != 0 && y <ySize-1){
-            if(getCellAtCoords(x,y-1,z).getAlive()){
+            if(getCellAtCoords(x,y-1,z).getState()>0){
                 neighbours++;
             }
-            if(getCellAtCoords(x,y+1,z).getAlive()){
+            if(getCellAtCoords(x,y+1,z).getState()>0){
                 neighbours++;
             }
         }
         if(z != 0 && z <zSize-1){
-            if(getCellAtCoords(x,y,z-1).getAlive()){
+            if(getCellAtCoords(x,y,z-1).getState()>0){
                 neighbours++;
             }
-            if(getCellAtCoords(y,x,z+1).getAlive()){
+            if(getCellAtCoords(y,x,z+1).getState()>0){
                 neighbours++;
             }
         }
