@@ -7,22 +7,27 @@ public class Cell {
     private int state;
     private boolean alive;
 
+    private boolean spawnedThisGeneration;
+
     public Cell(){
         this.color = Material.AIR;
         this.state = 0;
         this.alive = false;
+        this.spawnedThisGeneration = false;
     }
 
     public void cellSpawn(Material color, int state){
         setColor(color);
         setState(state);
         setAlive(true);
+        setSpawnedThisGeneration(true);
     }
 
     public void cellKill(){
         setColor(Material.AIR);
         setState(0);
         setAlive(false);
+        setSpawnedThisGeneration(false);
     }
 
 
@@ -46,4 +51,10 @@ public class Cell {
         this.alive = alive;
     }
 
+    public boolean getSpawnedThisGeneration(){
+        return spawnedThisGeneration;
+    }
+    public void setSpawnedThisGeneration(boolean spawnedThisGeneration){
+        this.spawnedThisGeneration = spawnedThisGeneration;
+    }
 }

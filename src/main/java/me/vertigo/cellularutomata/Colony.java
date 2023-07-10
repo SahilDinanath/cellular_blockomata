@@ -12,11 +12,13 @@ import java.util.Vector;
 public class Colony {
     //settings
     private int xCoordsInWorld = 1000, yCoordsInWorld = 64, zCoordsInWorld = 1000;
-    private int xSize = 100, ySize = 100, zSize = 100;
+    private int xSize = 400, ySize = 400, zSize = 400;
 
     //variables
     World world = Bukkit.getWorld("world");
     private Cell[][][] colonyOfCells = new Cell[ySize][xSize][zSize];
+
+    private boolean[][][] futureColony = new boolean[ySize][xSize][zSize];
 
     //rules of the colony
     Vector<Range<Integer>> survivalIntervals;
@@ -72,7 +74,11 @@ public class Colony {
                 }
             }
         }
+        //spawn cube of random blocks in center
+
         //spawnRandomCellsInColony();
+
+        //spawn single block in center
         spawnCellAtCoords(Material.STONE,xSize/2,ySize/2,zSize/2);
     }
     private boolean checkCellSurvival(int x, int y, int z){
@@ -95,6 +101,14 @@ public class Colony {
     }
 
     public void iterateColony(){
+        for(int x = 0; x< xSize;x++) {
+            for (int y = 0; y < ySize; y++) {
+                for (int z = 0; z < zSize; z++) {
+                getCellAtCoords(x,y,z).setSpawnedThisGeneration(false);
+                }
+            }
+        }
+
         for(int x = 0; x< xSize;x++){
             for(int y = 0; y< ySize;y++){
                 for(int z = 0; z< zSize;z++){
@@ -138,32 +152,32 @@ public class Colony {
         int neighbours = 0;
 
         if(x > 0){
-            if(getCellAtCoords(x-1,y,z).getState()>0){
+            if(getCellAtCoords(x-1,y,z).getState()>0 && !getCellAtCoords(x-1,y,z).getSpawnedThisGeneration()){
                 neighbours++;
             }
         }
         if(x<xSize-1){
-            if(getCellAtCoords(x+1,y,z).getState()>0){
+            if(getCellAtCoords(x+1,y,z).getState()>0 && !getCellAtCoords(x+1,y,z).getSpawnedThisGeneration()){
                 neighbours++;
             }
         }
         if(y > 0 ){
-            if(getCellAtCoords(x,y-1,z).getState()>0){
+            if(getCellAtCoords(x,y-1,z).getState()>0 && !getCellAtCoords(x,y-1,z).getSpawnedThisGeneration()){
                 neighbours++;
             }
         }
         if(y <ySize-1){
-            if(getCellAtCoords(x,y+1,z).getState()>0){
+            if(getCellAtCoords(x,y+1,z).getState()>0 && !getCellAtCoords(x,y+1,z).getSpawnedThisGeneration()){
                 neighbours++;
             }
         }
         if(z > 0 ){
-            if(getCellAtCoords(x,y,z-1).getState()>0){
+            if(getCellAtCoords(x,y,z-1).getState()>0 && !getCellAtCoords(x,y,z-1).getSpawnedThisGeneration()){
                 neighbours++;
             }
 
         }if(z <zSize-1){
-            if(getCellAtCoords(x,y,z+1).getState()>0){
+            if(getCellAtCoords(x,y,z+1).getState()>0  && !getCellAtCoords(x,y,z+1).getSpawnedThisGeneration()){
                 neighbours++;
             }
         }

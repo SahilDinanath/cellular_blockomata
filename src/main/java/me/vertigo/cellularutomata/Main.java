@@ -21,7 +21,7 @@ public  class Main {
         Colony colonyOfCells = new Colony(survivalInterval, spawnInterval, states);
 
 
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < 500; i++){
             colonyOfCells.iterateColony();
         }
     }
