@@ -7,10 +7,10 @@ public class Cell {
     private int state;
     private boolean alive;
 
-    public Cell(Material color, int state){
-        this.color = color;
-        this.state = state;
-        this.alive = true;
+    public Cell(){
+        this.color = Material.AIR;
+        this.state = 0;
+        this.alive = false;
     }
 
     public void cellSpawn(Material color, int state){
@@ -21,6 +21,8 @@ public class Cell {
 
     public void cellKill(){
         setColor(Material.AIR);
+        setState(0);
+        setAlive(false);
     }
 
 

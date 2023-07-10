@@ -6,27 +6,23 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 public  class Main {
-    public void calculateNewState(){
-
-    }
     public void runCellularAutomata() {
 
         //rules
-        Vector<Range<Integer>> survivalInterval = new Vector<Range<Integer>>();
-        survivalInterval.add(Range.closed(5,6));
+        Vector<Range<Integer>> survivalInterval = new Vector<>();
+        survivalInterval.add(Range.closed(0,6));
 
-        Vector<Range<Integer>> spawnInterval = new Vector<Range<Integer>>();
-        spawnInterval.add(Range.closed(1,3));
+        Vector<Range<Integer>> spawnInterval = new Vector<>();
+        spawnInterval.add(Range.singleton(1));
 
-        int states = 7;
+        spawnInterval.add(Range.singleton(3));
+        int states = 2;
 
         Colony colonyOfCells = new Colony(survivalInterval, spawnInterval, states);
 
 
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < 3; i++){
             colonyOfCells.iterateColony();
         }
-        colonyOfCells.displayColonyInWorld();
-        // Example usage: place a stone block at coordinates (10, 64, 10)
     }
 }
