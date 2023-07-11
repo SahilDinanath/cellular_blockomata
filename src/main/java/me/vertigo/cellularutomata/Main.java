@@ -6,23 +6,18 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 public  class Main {
+    //rules
+    private Vector<Range<Integer>> survivalInterval = new Vector<>(){{
+        add(Range.closed(0,6));
+    }};
+    private Vector<Range<Integer>> spawnInterval = new Vector<>(){{
+        add(Range.singleton(1));
+        add(Range.singleton(3));
+    }};
+    private int states = 2;
+    //colony
+    private Colony colonyOfCells = new Colony(survivalInterval, spawnInterval, states);
     public void runCellularAutomata() {
-
-        //rules
-        Vector<Range<Integer>> survivalInterval = new Vector<>();
-        survivalInterval.add(Range.closed(0,6));
-
-        Vector<Range<Integer>> spawnInterval = new Vector<>();
-        spawnInterval.add(Range.singleton(1));
-
-        spawnInterval.add(Range.singleton(3));
-        int states = 2;
-
-        Colony colonyOfCells = new Colony(survivalInterval, spawnInterval, states);
-
-
-        for(int i = 0; i < 500; i++){
             colonyOfCells.iterateColony();
-        }
     }
 }

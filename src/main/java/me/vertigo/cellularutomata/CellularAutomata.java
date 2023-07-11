@@ -14,8 +14,12 @@ public final class CellularAutomata extends JavaPlugin {
         System.out.println("Cellular Automata Starting");
 
         Main main = new Main();
-
-        main.runCellularAutomata();
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run(){
+                main.runCellularAutomata();
+            }
+        },300,5);
     }
 
 
