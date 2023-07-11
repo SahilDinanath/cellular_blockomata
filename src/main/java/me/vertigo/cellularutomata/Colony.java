@@ -12,7 +12,7 @@ import java.util.Vector;
 public class Colony {
     //settings
     private int xCoordsInWorld = 1000, yCoordsInWorld = 64, zCoordsInWorld = 1000;
-    private int xSize = 400, ySize = 400, zSize = 400;
+    private int xSize = 200, ySize = 200, zSize = 200;
 
     //variables
     World world = Bukkit.getWorld("world");
@@ -59,18 +59,25 @@ public class Colony {
                 for (int z = start; z < end; z++) {
                     random_number = rand.nextInt(10);
                     if(random_number >5){
-                        spawnCellAtCoords(Material.STONE, x, y, z);
+                        spawnCellAtCoords(Material.BLACK_GLAZED_TERRACOTTA, x, y, z);
                    }
                 }
             }
         }
     }
     public void colonyInit(){
+        for(int x = 0; x< 400;x++){
+            for(int y = 0; y< 400;y++){
+                for(int z = 0; z< 400;z++){
+                    Block block = world.getBlockAt(x + xCoordsInWorld, y + yCoordsInWorld, z+ zCoordsInWorld);
+                    block.setType(Material.AIR);
+                }
+            }
+        }
         for(int x = 0; x< xSize;x++){
             for(int y = 0; y< ySize;y++){
                 for(int z = 0; z< zSize;z++){
                     colonyOfCells[y][x][z] = new Cell();
-                    placeCellInWorld(x,y,z);
                 }
             }
         }
@@ -79,7 +86,7 @@ public class Colony {
         //spawnRandomCellsInColony();
 
         //spawn single block in center
-        spawnCellAtCoords(Material.STONE,xSize/2,ySize/2,zSize/2);
+        spawnCellAtCoords(Material.RED_STAINED_GLASS,xSize/2,ySize/2,zSize/2);
     }
     private boolean checkCellSurvival(int x, int y, int z){
         int neighbours = getNeighbours(x,y,z);
@@ -127,7 +134,7 @@ public class Colony {
                         }
                         else{
                             if(checkCellSpawn(x,y,z)){
-                                spawnCellAtCoords(Material.STONE,x,y,z);
+                                spawnCellAtCoords(Material.BLACK_GLAZED_TERRACOTTA,x,y,z);
                             }
                         }
                     }
