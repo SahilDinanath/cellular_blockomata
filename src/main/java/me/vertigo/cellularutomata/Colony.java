@@ -21,11 +21,11 @@ public class Colony {
     int[][] coordsToCheck = {
             //von neumann neighbouring
             {0, 0, -1},
-            {0, 0, +1},
+            {0, 0, 1},
             {0, -1, 0},
-            {0, +1, 0},
+            {0, 1, 0},
             {-1, 0, 0},
-            {+1, 0, 0},
+            {1, 0, 0},
             //moore neighbouring
             {-1, -1, -1},
             {-1, -1, 0},
