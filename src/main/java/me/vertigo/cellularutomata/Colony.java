@@ -48,6 +48,7 @@ public class Colony {
             {-1, 1, -1},
             {1, -1, -1},
     };
+    Coloring coloring = new Coloring();
     //rules of the colony
     private Vector<Range<Integer>> survivalIntervals;
     private Vector<Range<Integer>> spawnIntervals;
@@ -72,7 +73,10 @@ public class Colony {
         Block block = world.getBlockAt(x + xCoordsInWorld, y + yCoordsInWorld, z + zCoordsInWorld);
         block.setType(getCellAtCoords(x, y, z).getColor());
     }
-
+    private void placeCellInWorldWithColor(Material color, int x, int y, int z) {
+        Block block = world.getBlockAt(x + xCoordsInWorld, y + yCoordsInWorld, z + zCoordsInWorld);
+        block.setType(color);
+    }
     private void spawnCellAtCoords(Material color, int x, int y, int z) {
         getCellAtCoords(x, y, z).cellSpawn(color, states);
         placeCellInWorld(x, y, z);
@@ -119,14 +123,13 @@ public class Colony {
         }
         //spawn cube of random blocks in center
 
-        spawnRandomCellsInColony();
+        //spawnRandomCellsInColony();
 
         //spawn single block in center
-        //spawnCellAtCoords(Material.RED_STAINED_GLASS, xSize / 2, ySize / 2, zSize / 2);
+        spawnCellAtCoords(Material.RED_STAINED_GLASS, xSize / 2, ySize / 2, zSize / 2);
     }
 
-    private boolean checkCellSurvival(int x, int y, int z) {
-        int neighbours = getNeighbours(x, y, z);
+    private boolean checkCellSurvival(int neighbours, int x, int y, int z) {
         for (Range<Integer> survivalRange : survivalIntervals) {
             if (survivalRange.contains(neighbours)) {
                 return true;
@@ -135,8 +138,7 @@ public class Colony {
         return false;
     }
 
-    private boolean checkCellSpawn(int x, int y, int z) {
-        int neighbours = getNeighbours(x, y, z);
+    private boolean checkCellSpawn(int neighbours, int x, int y, int z) {
         for (Range<Integer> spawnRange : spawnIntervals) {
             if (spawnRange.contains(neighbours)) {
                 return true;
@@ -158,8 +160,9 @@ public class Colony {
             for (int y = 0; y < ySize; y++) {
                 for (int z = 0; z < zSize; z++) {
                     Cell currentCell = getCellAtCoords(x, y, z);
+                    int neighbours = getNeighbours(x, y, z);
                     if (currentCell.getAlive()) {
-                        if (!checkCellSurvival(x, y, z)) {
+                        if (!checkCellSurvival(neighbours,x, y, z)) {
                             currentCell.setAlive(false);
                         }
                     } else {
@@ -167,10 +170,13 @@ public class Colony {
                             currentCell.setState(currentCell.getState() - 1);
                             if (currentCell.getState() == 0) {
                                 removeCellAtCoords(x, y, z);
+                            }else{
+                                placeCellInWorldWithColor(coloring.densityShading(neighbours),x,y,z);
                             }
+
                         } else {
-                            if (checkCellSpawn(x, y, z)) {
-                                spawnCellAtCoords(Material.BLACK_GLAZED_TERRACOTTA, x, y, z);
+                            if (checkCellSpawn(neighbours,x, y, z)) {
+                                spawnCellAtCoords(coloring.densityShading(neighbours), x, y, z);
                             }
                         }
                     }
