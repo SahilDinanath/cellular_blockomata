@@ -19,7 +19,7 @@ public final class CellularAutomata extends JavaPlugin {
             public void run(){
                 main.runCellularAutomata();
             }
-        },300,5);
+        },300,20);
     }
 
 
