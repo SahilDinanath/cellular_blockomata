@@ -11,14 +11,14 @@ import java.util.Vector;
 
 public class Colony {
     //settings
-    private int xCoordsInWorld = 1000, yCoordsInWorld = 64, zCoordsInWorld = 1000;
-    private int xSize = 200, ySize = 200, zSize = 200;
+    final private int xCoordsInWorld = 1000, yCoordsInWorld = 64, zCoordsInWorld = 1000;
+    final private int xSize = 200, ySize = 200, zSize = 200;
 
     //variables
     World world = Bukkit.getWorld("world");
-    private Cell[][][] colonyOfCells = new Cell[ySize][xSize][zSize];
-    private int neighbouringSize;
-    int[][] coordsToCheck = {
+    final private Cell[][][] colonyOfCells = new Cell[ySize][xSize][zSize];
+    final private int neighbouringSize;
+    final int[][] coordsToCheck = {
             //von neumann neighbouring
             {0, 0, -1},
             {0, 0, 1},
@@ -48,11 +48,9 @@ public class Colony {
             {-1, 1, -1},
             {1, -1, -1},
     };
-    Coloring coloring = new Coloring();
     //rules of the colony
-    private Vector<Range<Integer>> survivalIntervals;
-    private Vector<Range<Integer>> spawnIntervals;
-    private int states;
+    final private Vector<Range<Integer>> survivalIntervals,spawnIntervals;
+    final private int states;
 
     public Colony(Vector<Range<Integer>> survivalIntervals, Vector<Range<Integer>> spawnIntervals, int states, boolean neighbouringMethod) {
         this.survivalIntervals = survivalIntervals;
@@ -62,7 +60,6 @@ public class Colony {
         this.neighbouringSize = neighbouringMethod ? 26 : 6;
         //clears the previous run and spawns the starting blocks
         colonyInit();
-
     }
 
     public Cell getCellAtCoords(int x, int y, int z) {
@@ -73,10 +70,12 @@ public class Colony {
         Block block = world.getBlockAt(x + xCoordsInWorld, y + yCoordsInWorld, z + zCoordsInWorld);
         block.setType(getCellAtCoords(x, y, z).getColor());
     }
+
     private void placeCellInWorldWithColor(Material color, int x, int y, int z) {
         Block block = world.getBlockAt(x + xCoordsInWorld, y + yCoordsInWorld, z + zCoordsInWorld);
         block.setType(color);
     }
+
     private void spawnCellAtCoords(Material color, int x, int y, int z) {
         getCellAtCoords(x, y, z).cellSpawn(color, states);
         placeCellInWorld(x, y, z);
@@ -105,15 +104,18 @@ public class Colony {
         }
     }
 
-    public void colonyInit() {
-        for (int x = 0; x < 400; x++) {
-            for (int y = 0; y < 400; y++) {
-                for (int z = 0; z < 400; z++) {
+    //clears field if previous iteration was run
+    public void resetField(int xSize,int ySize,int zSize){
+        for (int x = 0; x < xSize; x++) {
+            for (int y = 0; y < ySize; y++) {
+                for (int z = 0; z < zSize; z++) {
                     Block block = world.getBlockAt(x + xCoordsInWorld, y + yCoordsInWorld, z + zCoordsInWorld);
                     block.setType(Material.AIR);
                 }
             }
         }
+    }
+    public void fillArrayWithCells(){
         for (int x = 0; x < xSize; x++) {
             for (int y = 0; y < ySize; y++) {
                 for (int z = 0; z < zSize; z++) {
@@ -121,15 +123,20 @@ public class Colony {
                 }
             }
         }
-        //spawn cube of random blocks in center
+    }
+    public void colonyInit() {
+        resetField(400,400,400);
 
+        fillArrayWithCells();
+
+        //spawn cube of random blocks in center
         //spawnRandomCellsInColony();
 
         //spawn single block in center
         spawnCellAtCoords(Material.RED_STAINED_GLASS, xSize / 2, ySize / 2, zSize / 2);
     }
 
-    private boolean checkCellSurvival(int neighbours, int x, int y, int z) {
+    private boolean checkCellSurvival(int neighbours) {
         for (Range<Integer> survivalRange : survivalIntervals) {
             if (survivalRange.contains(neighbours)) {
                 return true;
@@ -138,7 +145,7 @@ public class Colony {
         return false;
     }
 
-    private boolean checkCellSpawn(int neighbours, int x, int y, int z) {
+    private boolean checkCellSpawn(int neighbours) {
         for (Range<Integer> spawnRange : spawnIntervals) {
             if (spawnRange.contains(neighbours)) {
                 return true;
@@ -161,8 +168,9 @@ public class Colony {
                 for (int z = 0; z < zSize; z++) {
                     Cell currentCell = getCellAtCoords(x, y, z);
                     int neighbours = getNeighbours(x, y, z);
+                    Material color = Coloring.densityShading(neighbours);
                     if (currentCell.getAlive()) {
-                        if (!checkCellSurvival(neighbours,x, y, z)) {
+                        if (!checkCellSurvival(neighbours)) {
                             currentCell.setAlive(false);
                         }
                     } else {
@@ -170,13 +178,13 @@ public class Colony {
                             currentCell.setState(currentCell.getState() - 1);
                             if (currentCell.getState() == 0) {
                                 removeCellAtCoords(x, y, z);
-                            }else{
-                                placeCellInWorldWithColor(coloring.densityShading(neighbours),x,y,z);
+                            } else {
+                                placeCellInWorldWithColor(color, x, y, z);
                             }
 
                         } else {
-                            if (checkCellSpawn(neighbours,x, y, z)) {
-                                spawnCellAtCoords(coloring.densityShading(neighbours), x, y, z);
+                            if (checkCellSpawn(neighbours)) {
+                                spawnCellAtCoords(color, x, y, z);
                             }
                         }
                     }
@@ -190,7 +198,7 @@ public class Colony {
 
         for (int i = 0; i < neighbouringSize; i++) {
             try {
-                Cell currentCell = getCellAtCoords(x+ coordsToCheck[i][0], y+coordsToCheck[i][1], z+coordsToCheck[i][2]);
+                Cell currentCell = getCellAtCoords(x + coordsToCheck[i][0], y + coordsToCheck[i][1], z + coordsToCheck[i][2]);
                 if (currentCell.getState() > 0 && !currentCell.getSpawnedThisGeneration()) {
                     neighbours++;
                 }
