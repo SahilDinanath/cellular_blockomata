@@ -1,0 +1,7 @@
+name: CellularAutomata
+version: '${version}'
+main: me.vertigo.cellularutomata.CellularAutomata
+api-version: '1.20'
+authors: [Vertigo]
+description: Plugin to simulate cellular automata in minecraft.
+website: https://www.youtube.com/@vertig8238
